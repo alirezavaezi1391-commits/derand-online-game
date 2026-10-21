@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نبرد کشورها | دراند</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800&display=swap');
+:root {
+  --bg:#07111c; --panel:#0e1e2d; --line:#294052;
+  --gold:#f2b544; --text:#f5f7fa; --muted:#9fb1c0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif}
+button{font:inherit;cursor:pointer}
+.container{width:min(1100px,94%);margin:auto}
+header{background:#091622;border-bottom:1px solid var(--line);padding:15px 0}
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{color:var(--gold);font-weight:800;font-size:20px}
+.logo small{display:block;color:var(--muted);font-size:11px;font-weight:400}
+.connection{font-size:12px;color:var(--muted)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#d8ad4c;margin-left:6px}
+main{padding:25px 0 50px}
+.hero{padding:25px;border:1px solid var(--line);border-radius:16px;margin-bottom:18px;background:linear-gradient(100deg,#0c1b2be8,#0c1b2bf7),url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80") center/cover}
+.hero h1{font-size:clamp(25px,4vw,39px);margin:0}
+.hero p{color:var(--muted);font-size:13px;margin-bottom:0}
+.gold{color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}
+.stat span{font-size:12px;color:var(--muted)}
+.stat strong{display:block;font-size:22px;margin-top:3px}
+.layout{display:grid;grid-template-columns:1.6fr 1fr;gap:17px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:19px;min-width:0}
+.panel h2{margin:0 0 5px;font-size:20px}
+.description{color:var(--muted);font-size:12px;margin:0 0 17px}
+.map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.region{min-width:0;min-height:110px;padding:8px 3px;border-radius:10px;border:1px solid #405466;background:#182b3a;color:white;text-align:center;overflow-wrap:anywhere}
+.region:hover{filter:brightness(1.2)}
+.region.ari{background:linear-gradient(150deg,#145780,#10334b);border-color:#3295d2}
+.region.nor{background:linear-gradient(150deg,#792f39,#3f202b);border-color:#d45d69}
+.region.neutral{background:linear-gradient(150deg,#35444d,#202c35)}
+.region.selected{outline:3px solid var(--gold);outline-offset:1px}
+.region-name,.region-owner{display:block;line-height:1.7}
+.region-name{font-size:11px}
+.region-owner{color:#d1dae1;font-size:9px;margin-top:4px}
+.troops{display:block;margin-top:5px;color:var(--gold);font-weight:800;font-size:12px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.legend span{font-size:11px;color:var(--muted)}
+.swatch{width:9px;height:9px;display:inline-block;border-radius:3px;margin-left:4px}
+.action{width:100%;padding:11px;border-radius:9px;border:1px solid var(--gold);background:var(--gold);color:#18202a;font-weight:800;margin-top:8px}
+.action.secondary{background:transparent;color:var(--text);border-color:var(--line)}
+.notice,.status{padding:12px;background:#081521;border:1px solid var(--line);border-radius:9px;color:#d9e2ea;font-size:12px;margin-top:12px}
+.status{background:#132b37;border-right:3px solid var(--gold);margin:0 0 15px}
+.rules{margin-top:18px}
+.rules p{color:var(--muted);font-size:12px;margin:8px 0}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}
+@media(max-width:750px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:400px){.container{width:96%}.panel{padding:11px}.map{gap:5px}.region{min-height:100px}.region-name{font-size:10px}.hero{padding:17px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="container header-row">
+    <div class="logo">⚔️ نبرد کشورها<small>جهان استراتژیک دراند</small></div>
+    <div class="connection" id="connection"><span class="dot"></span>در حال اتصال...</div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>سرنوشت کشور در دستان توست</h1>
+    <p>قلمرو بگیر، منابع جمع کن، نیرو استخدام کن و در نبرد آنلاین پیروز شو.</p>
+  </section>
+
+  <div id="status" class="status">در حال بارگیری بازی...</div>
+
+  <div class="stats">
+    <div class="stat"><span>کشور من</span><strong id="myNation">---</strong></div>
+    <div class="stat"><span>خزانه</span><strong id="myGold" class="gold">۰</strong></div>
+    <div class="stat"><span>قلمروهای من</span><strong id="myTerritories">۰</strong></div>
+    <div class="stat"><span>مجموع نیروها</span><strong id="myTroops">۰</strong></div>
+  </div>
+
+  <div class="layout">
+    <section class="panel">
+      <h2>🗺️ نقشه نبرد</h2>
+      <p class="description">قلمرو خودت را انتخاب کن، سپس یک منطقه همسایه را برای حمله انتخاب کن.</p>
+      <div id="map" class="map"></div>
+      <div class="legend">
+        <span><i class="swatch" style="background:#177cba"></i>آریانا</span>
+        <span><i class="swatch" style="background:#b94049"></i>نوران</span>
+        <span><i class="swatch" style="background:#35444d"></i>بی‌طرف</span>
+        <span><i class="swatch" style="background:#f2b544"></i>انتخاب‌شده</span>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>🎖️ فرماندهی</h2>
+      <p class="description">اقدامات کشور خودت را مدیریت کن.</p>
+      <div id="selection" class="status">هنوز قلمرویی انتخاب نکرده‌ای.</div>
+      <button id="recruit" class="action">＋ استخدام ۴ نیرو — ۸ طلا</button>
+      <button id="cancel" class="action secondary">لغو انتخاب</button>
+      <div id="notice" class="notice" aria-live="polite">منتظر اتصال به سرور...</div>
+      <div class="rules">
+        <h3>📜 قوانین</h3>
+        <p>▪ برای شروع، دو بازیکن باید آنلاین باشند.</p>
+        <p>▪ حمله فقط به مناطق همسایه امکان‌پذیر است.</p>
+        <p>▪ هر ۸ ثانیه منابع کشور افزایش پیدا می‌کند.</p>
+        <p>▪ استخدام ۴ نیرو، ۸ طلا هزینه دارد.</p>
+        <p>▪ تصرف همه قلمروها باعث پیروزی می‌شود.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer>جمهوری دراند · بازی استراتژیک چندنفره · سرزمین‌ها و نبردها خیالی هستند</footer>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+let myTeam = null;
+let state = null;
+let selectedRegion = null;
+
+const names = { ari:"آریانا", nor:"نوران" };
+const fa = n => Number(n).toLocaleString("fa-IR");
+const mapEl = document.getElementById("map");
+const statusEl = document.getElementById("status");
+const noticeEl = document.getElementById("notice");
+
+function notice(text) {
+  noticeEl.textContent = text;
+}
+
+function adjacent(a, b) {
+  return Math.abs(a.x-b.x) + Math.abs(a.y-b.y) === 1;
+}
+
+socket.on("connect", () => {
+  document.getElementById("connection").innerHTML =
+    '<span class="dot" style="background:#51d69a"></span>متصل به سرور';
+});
+
+socket.on("disconnect", () => {
+  document.getElementById("connection").innerHTML =
+    '<span class="dot" style="background:#e45d69"></span>اتصال قطع شد';
+  statusEl.textContent = "ارتباط قطع شده؛ در حال تلاش مجدد...";
+});
+
+socket.on("welcome", data => {
+  myTeam = data.team;
+  document.getElementById("myNation").textContent = names[myTeam];
+  notice("کشور تو " + data.nation + " است.");
+  render();
+});
+
+socket.on("notice", message => notice(message));
+
+socket.on("gameState", nextState => {
+  state = nextState;
+
+  if (selectedRegion !== null &&
+      !state.territories.some(t => t.id === selectedRegion && t.owner === myTeam)) {
+    selectedRegion = null;
+  }
+
+  render();
+});
+
+function selectRegion(id) {
+  if (!state || !myTeam) return;
+
+  if (state.phase !== "playing") {
+    notice("منتظر ورود بازیکن دوم هستیم.");
+    return;
+  }
+
+  const target = state.territories.find(t => t.id === id);
+
+  if (selectedRegion === null) {
+    if (target.owner !== myTeam) {
+      notice("ابتدا قلمرو خودت را انتخاب کن.");
+      return;
+    }
+    selectedRegion = id;
+    notice("حالا منطقه همسایه را برای حمله انتخاب کن.");
+    render();
+    return;
+  }
+
+  if (selectedRegion === id) {
+    selectedRegion = null;
+    notice("انتخاب لغو شد.");
+    render();
+    return;
+  }
+
+  if (target.owner === myTeam) {
+    selectedRegion = id;
+    notice("قلمرو انتخاب شد. منطقه همسایه را انتخاب کن.");
+    render();
+    return;
+  }
+
+  const source = state.territories.find(t => t.id === selectedRegion);
+
+  if (!adjacent(source, target)) {
+    notice("این منطقه همسایه نیست.");
+    return;
+  }
+
+  socket.emit("attack", { from:selectedRegion, to:target.id });
+  selectedRegion = null;
+  render();
+}
+
+function render() {
+  if (!state) return;
+
+  const owned = state.territories.filter(t => t.owner === myTeam);
+  const totalTroops = owned.reduce((sum,t) => sum+t.troops, 0);
+
+  document.getElementById("myGold").textContent =
+    myTeam ? fa(state.gold[myTeam]) : "—";
+  document.getElementById("myTerritories").textContent = fa(owned.length);
+  document.getElementById("myTroops").textContent = fa(totalTroops);
+
+  if (state.phase === "waiting") {
+    statusEl.textContent = "در انتظار بازیکن دوم؛ دوستت باید همین لینک را باز کند.";
+  } else if (state.phase === "finished") {
+    statusEl.textContent = state.winner === myTeam
+      ? "🏆 پیروز شدی! همه قلمروها را تصرف کردی."
+      : "نبرد تمام شد؛ کشور رقیب پیروز شد.";
+  } else {
+    statusEl.textContent = "⚔️ نبرد فعال است · بازیکنان آنلاین: " + fa(state.onlinePlayers);
+  }
+
+  const chosen = state.territories.find(t => t.id === selectedRegion);
+  document.getElementById("selection").textContent = chosen
+    ? "انتخاب‌شده: " + chosen.name + " · نیرو: " + fa(chosen.troops)
+    : "هنوز قلمرویی انتخاب نکرده‌ای.";
+
+  mapEl.innerHTML = "";
+
+  state.territories.forEach(region => {
+    const button = document.createElement("button");
+    const ownerClass = region.owner === "ari" ? "ari" :
+      region.owner === "nor" ? "nor" : "neutral";
+
+    button.className = "region " + ownerClass +
+      (selectedRegion === region.id ? " selected" : "");
+
+    const name = document.createElement("span");
+    name.className = "region-name";
+    name.textContent = region.name;
+
+    const owner = document.createElement("span");
+    owner.className = "region-owner";
+    owner.textContent = region.owner
+      ? "کشور: " + names[region.owner]
+      : "قلمرو بی‌طرف";
+
+    const troops = document.createElement("span");
+    troops.className = "troops";
+    troops.textContent = "⚔ " + fa(region.troops) + " نیرو";
+
+    button.append(name, owner, troops);
+    button.addEventListener("click", () => selectRegion(region.id));
+    mapEl.appendChild(button);
+  });
+}
+
+document.getElementById("recruit").addEventListener("click", () => {
+  if (selectedRegion === null) {
+    notice("ابتدا یکی از قلمروهای خودت را انتخاب کن.");
+    return;
+  }
+  socket.emit("recruit", selectedRegion);
+});
+
+document.getElementById("cancel").addEventListener("click", () => {
+  selectedRegion = null;
+  notice("انتخاب لغو شد.");
+  render();
+});
+</script>
+</body>
+</html>
